@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.zerock.jex01.board.mapper.ReplyMapper"><!--namespace : 패키지명이랑 맞춰주기  namespace + id = 풀네임-->
+
+    <insert id = "insert">
+        insert into tbl_reply(bno,replyer,reply)
+        values (#{bno}, #{replyer}, #{reply})
+    </insert>
+
+<!--    replyMapper에 있는 메소드명 복사-->
+    <select id="getListWithBoard" resultType="org.zerock.jex01.board.domain.Reply">
+        select * from tbl_reply where bno = #{bno} order by rno asc
+    </select>
+
+    <delete id="delete">
+        delete from tbl_reply where rno=#{rno}
+    </delete>
+
+    <update id="update">
+        update tbl_reply set reply = #{reply}, modDate = now() where rno = #{rno}
+    </update>
+
+</mapper>

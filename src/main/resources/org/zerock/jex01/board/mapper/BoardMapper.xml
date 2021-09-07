@@ -5,9 +5,67 @@
 
 <mapper namespace="org.zerock.jex01.board.mapper.BoardMapper"><!--namespace : 패키지명이랑 맞춰주기  namespace + id = 풀네임-->
 
+    <sql id="search">
+    <if test="type != null">
+        <foreach collection="arr" item="item" separator="OR" open="WHERE (" close=")">
+            <if test="item == 'T'.toString()">
+                title like concat('%', #{keyword}, '%')
+            </if>
+            <if test="item == 'C'.toString()">
+                title like concat('%', #{keyword}, '%')
+            </if>
+            <if test="item == 'W'.toString()">
+                title like concat('%', #{keyword}, '%')
+            </if>
+        </foreach>
+    </if>
+    </sql>
+
     <insert id="insert">
         insert tbl_board (title,content,writer)
         values (#{title},#{content},#{writer})
+        <selectKey order="AFTER" resultType="long" keyProperty="bno">
+--         int값이였는데 Long로 바꿔줌
+            select last_insert_id() <!--마지막에 insert된 값 가져오기-->
+        </selectKey>
     </insert>
+
+    <select id="getList" resultType="org.zerock.jex01.board.domain.Board">
+
+        select * from tbl_board
+
+        <include refid="search"></include>
+
+        order by bno desc limit #{skip},#{size}
+
+    </select>
+
+    <select id="getCount" resultType="int">
+
+        select count(bno) from tbl_board
+
+
+        <include refid="search"></include>
+
+
+    </select>
+
+    <select id="select" resultType="org.zerock.jex01.board.domain.Board">
+        select * from tbl_board where bno = #{bno}
+
+    </select>
+
+    <delete id="delete">
+        delete from tbl_board where bno = #{bno}
+    </delete>
+
+    <update id="update">
+        update tbl_board set title= #{title}, content = #{content}, modDate = now()
+        where bno=#{bno}
+    </update>
+
+    <update id="updateReplyCnt">
+        update tbl_board set replyCnt = replyCnt + #{num} where bno = #{bno}
+    </update>
 
 </mapper>

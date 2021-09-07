@@ -12,7 +12,7 @@ import org.zerock.jex01.common.config.RootConfig;
 @Log4j2
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration( classes = {BoardRootConfig.class, RootConfig.class})// 두 개다 로딩해줘야 에러가 안난다
-public class    TimeMapperTests {
+public class TimeMapperTests {
 
     @Autowired
     TimeMapper timeMapper;//timemapper 주입
@@ -21,8 +21,12 @@ public class    TimeMapperTests {
     public void testGetTime(){
         log.info("--------------------");
         log.info("--------------------");
+        log.info(timeMapper); //로그 찍히는거 proxy
         log.info(timeMapper.getTime2());
         log.info("--------------------");
         log.info("--------------------");
     }
+
+
+
 }
