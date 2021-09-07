@@ -81,6 +81,8 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework/spring-aop
     implementation group: 'org.springframework', name: 'spring-aop', version: '5.3.9'
 
+    implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.14'
+
 
 }
 
