@@ -65,6 +65,18 @@
                             <button type="button" class="btn btn-info btnMod">MODIFY</button>
                         </div>
 
+                           <%--파일이 있는지확인 하고 read에서 첨부파일 조회 하는 코드--%>
+                        <div>
+                                <%--${boardDTO.files}--%>
+                                <c:forEach items="${boardDTO.files}" var="attach">
+                                      <div>
+                                          <c:if test="${attach.image}">
+                                             <img onclick="javascript:showOrigin('${attach.getFileLink()}')" src="/viewFile?file=${attach.getThumbnail()}">
+                                          </c:if>
+                                      </div>                  
+                                </c:forEach>
+                        </div>
+
                     </div>
                     <!-- /.card -->
                     <div class="card direct-chat direct-chat-primary">
@@ -160,6 +172,21 @@
 </div>
 <!-- /.modal -->
 
+<div class="modal fade" id="modal-image">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img id="targetImage">
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
 <%@include file="../includes/footer.jsp"%>
 
 <script>
@@ -183,6 +210,18 @@
 <script src="/resources/js/reply.js">//read.jsp랑 reply.js랑 연결하는코드,read에서 글을 읽어야 댓글을 달수 있기때문에 read랑 연결</script>
 
 <script>
+
+    const modalImage = new bootstrap.Modal(document.querySelector('#modal-image'))
+
+    function showOrigin(fileLink){
+        document.querySelector('#targetImage').src = `/viewFile?file=\${fileLink}`
+        modalImage.show()
+    }
+
+    function after(result) {
+        console.log("after.........")
+        console.log("result:" , result)
+    }
 
     // function after(result){//배열을 담아서 사용하는 예제
     //     console.log("after...............")
@@ -327,6 +366,7 @@
         })
 
     },false)
+
 
 </script>
 

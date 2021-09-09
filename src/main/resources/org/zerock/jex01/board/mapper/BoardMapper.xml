@@ -50,9 +50,30 @@
 
     </select>
 
-    <select id="select" resultType="org.zerock.jex01.board.domain.Board">
-        select * from tbl_board where bno = #{bno}
+    <resultMap id="boardMap" type="org.zerock.jex01.board.domain.Board">
+        <id property="bno" column="bno"></id>
+        <result property="title" column="title"></result>
+        <result property="content" column="content"></result>
+        <result property="writer" column="writer"></result>
+        <result property="replyCnt" column="replyCnt"></result>
+        <result property="modDate" column="modDate"></result>
+        <result property="regDate" column="regDate"></result>
+        <collection property="attachList" resultMap="attachMap"></collection>
+    </resultMap>
 
+    <resultMap id="attachMap" type="org.zerock.jex01.board.domain.BoardAttach">
+        <result property="uuid" column="uuid"></result>
+        <result property="bno" column="bno"></result>
+        <result property="fileName" column="fileName"></result>
+        <result property="path" column="path"></result>
+        <result property="image" column="image"></result>
+    </resultMap> <!--board랑 attach를 한번에 처리해줬음-->
+
+    <select id="select" resultMap="boardMap">
+        select  *
+        from
+           tbl_board board left join tbl_attach ta on board.bno = ta.bno
+        where board.bno = #{bno}
     </select>
 
     <delete id="delete">
@@ -72,4 +93,8 @@
         insert into tbl_attach (uuid,bno,fileName,path,image)
         values (#{uuid}, #{bno}, #{fileName}, #{path}, #{image})
     </insert>
+
+    <delete id="deleteAttach">
+        delete from tbl_attach where bno = #{bno}
+    </delete>
 </mapper>

@@ -49,7 +49,7 @@ public class UploadController {
     }
 
     @GetMapping("/downFile")//첨부파일만 별도로 만들어서 관리하는 서버
-         //무슨 타입인지 모르니까 ResponseEntity<byte[]> 로쭷다.
+         //무슨 타입인지 모르니까 ResponseEntity<byte[]> 로 선언했다.
     public ResponseEntity<byte[]> download(@RequestParam("file") String fileName)throws Exception{//byte단위로 배열로 받아옴
 
         File file = new File("C:\\upload"+ File.separator+fileName);//업로드한 파일이 있는위치를 가리킨다
@@ -85,6 +85,7 @@ public class UploadController {
 //        httpHeaders.add("Content-type", mimeType);
 
         result = ResponseEntity.ok().header("Content-Type", mimeType).body(data);//만들어진 공간에 헤더에 있는정보를 준다, 응답코드 메세지를 만들어준다
+             //header 클라이언트와 서버가 요청 또는 응답으로 부가적인 정보를 전송할 수 있다  body:HTTP의 request 또는 response가 전송하는 데이터
 
         return result;//데이터 정보를 뿌려준다,,여기까지 하고나면 로그창에 파일을 가져와서 경로 확인하려고 한다 -> upload.jsp 썸네일 하러간다
 

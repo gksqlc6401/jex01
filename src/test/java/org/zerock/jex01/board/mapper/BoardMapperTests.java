@@ -25,6 +25,7 @@ public class BoardMapperTests {
 
     @Autowired
     BoardMapper boardMapper;
+    Board board;
 
     @Test
     public void testDummies(){
@@ -61,8 +62,11 @@ public class BoardMapperTests {
     @Test
     public void testSelect() {
 
-        log.info(boardMapper.select(229L));
+        Board board = boardMapper.select(134L);
 
+        log.info(board);
+        log.info(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
+        board.getAttachList().forEach(attach-> log.info(attach));
     }
 
     @Test
