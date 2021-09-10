@@ -158,7 +158,7 @@
 
         const fileDivArr = uploadResultDiv.querySelectorAll("div")//for문돌려서 div에 쌓인 정보를 fileDivArr에 넣었다.
 
-        if(fileDivArr && fileDivArr.length >0) {//첨부파일이 없다면 바로 등록해라
+        if(fileDivArr && fileDivArr.length >0) {//!fileDivArr 첨부파일이 없다면 바로 등록해라
             let str = ""
             for(let i = 0; i<fileDivArr.length; i++) {
                 const target = fileDivArr[i]

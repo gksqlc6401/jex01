@@ -72,6 +72,7 @@
                                       <div>
                                           <c:if test="${attach.image}">
                                              <img onclick="javascript:showOrigin('${attach.getFileLink()}')" src="/viewFile?file=${attach.getThumbnail()}">
+                                                <%--원본경로랑 썸네일 경로랑 파라미터로 줌--%>
                                           </c:if>
                                       </div>                  
                                 </c:forEach>
@@ -211,7 +212,7 @@
 
 <script>
 
-    const modalImage = new bootstrap.Modal(document.querySelector('#modal-image'))
+    const modalImage = new bootstrap.Modal(document.querySelector('#modal-image'))//제이쿼리를 안쓰려고 링크 받아옴
 
     function showOrigin(fileLink){
         document.querySelector('#targetImage').src = `/viewFile?file=\${fileLink}`
