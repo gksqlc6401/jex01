@@ -63,7 +63,7 @@ public class PasswordTests {
 
         String query = "insert into tbl_member (mid, mpw, mname) values ('v1','v2','v3');";
 
-        for (int i=0; i<10; i++) {
+        for (int i=100; i<110; i++) {
 
             String mid = "user"+i; //user0
             String mpw = passwordEncoder.encode("pw"+i); //pw -> Bcrypted
