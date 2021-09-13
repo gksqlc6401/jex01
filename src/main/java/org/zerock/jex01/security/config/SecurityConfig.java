@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.zerock.jex01.security.hendler.CustomLoginSuccessHandler;
+import org.zerock.jex01.security.service.CustomUserDetailsService;
 
 @Configuration   //애는 설정파일이야 라고하는거
 @EnableWebSecurity
@@ -29,14 +31,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/sample/doMember").access("hasRole('ROLE_MEMBER')")
                 .antMatchers("/sample/doAdmin").access("hasRole('ROLE_ADMIN')");
 
-        http.formLogin();
+        http.formLogin().loginPage("/customLogin")//로그인 페이지는 커스텀 방식으로 띄우는데 로그인은 스프링 시큐리티가 알아서 해준다
+                .loginProcessingUrl("/login");//post방식으로 실제로 url을 처리하는거
+//                .successHandler(customLoginSuccessHandler());//인증이 성공하면 이렇게 ㄴㅏ오게 하는거
+//        http.logout().invalidateHttpSession(true);//야 로그아웃하면 세션무효, 기본값으로 디폴트있어서 안해줘도 된다
+
+
+        http.csrf().disable();//disable을 하면 따로 로그아웃을 만들어줄 필요가 없다.
+
+    }
+
+    @Bean
+    public CustomLoginSuccessHandler customLoginSuccessHandler() {
+        return new CustomLoginSuccessHandler();
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("member1").password("$2a$10$YJZ7KZf28trrhJWZixOL8O6uCYGLsjPYXYagem/4DQvIqiaerJKBy")
-                .roles("MEMBER");
-        auth.inMemoryAuthentication().withUser("member1").password("{noop}admin1")
-                .roles("MEMBER","ADMIN");//한사용자가 둘다 들어갈수있다 (관리자)
+
+        auth.userDetailsService(customUserDetailsService());//지정하는거 얘를 통해서 로그인 프로세스가 진행한다는것
+
+//        auth.inMemoryAuthentication().withUser("member1").password("$2a$10$YJZ7KZf28trrhJWZixOL8O6uCYGLsjPYXYagem/4DQvIqiaerJKBy")
+//                .roles("MEMBER");
+//        auth.inMemoryAuthentication().withUser("admin1").password("$2a$10$YJZ7KZf28trrhJWZixOL8O6uCYGLsjPYXYagem/4DQvIqiaerJKBy")
+//                .roles("MEMBER","ADMIN");//한사용자가 둘다 들어갈수있다 (관리자)
+    }
+
+    @Bean
+    public CustomUserDetailsService customUserDetailsService() {
+        return new CustomUserDetailsService();
     }
 }
