@@ -1,6 +1,8 @@
 package org.zerock.jex01.security.config;
 
 import lombok.extern.log4j.Log4j2;
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -10,16 +12,29 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.zerock.jex01.security.hendler.CustomLoginSuccessHandler;
 import org.zerock.jex01.security.service.CustomUserDetailsService;
+
+import javax.sql.DataSource;
 
 @Configuration   //애는 설정파일이야 라고하는거
 @EnableWebSecurity
 @Log4j2
+@MapperScan(basePackages = "org.zerock.jex01.security.mapper")
+@ComponentScan(basePackages = "org.zerock.jex01.security.service")//3
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;//4
+
+    @Autowired
+    private DataSource dataSource;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+
         return new BCryptPasswordEncoder();//패스워드 인코딩을 해줬다(복잡하게 만들어줬다)
     }
 
@@ -39,17 +54,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.csrf().disable();//disable을 하면 따로 로그아웃을 만들어줄 필요가 없다.
 
+        http.rememberMe().tokenRepository(persistentTokenRepository())
+                .key("zerock").tokenValiditySeconds(60*60*24*30);//한달짜리
+
     }
 
     @Bean
     public CustomLoginSuccessHandler customLoginSuccessHandler() {
+
         return new CustomLoginSuccessHandler();
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
-        auth.userDetailsService(customUserDetailsService());//지정하는거 얘를 통해서 로그인 프로세스가 진행한다는것
+        auth.userDetailsService(customUserDetailsService);//6
+
+//        auth.userDetailsService(customUserDetailsService());//지정하는거 얘를 통해서 로그인 프로세스가 진행한다는것//5
 
 //        auth.inMemoryAuthentication().withUser("member1").password("$2a$10$YJZ7KZf28trrhJWZixOL8O6uCYGLsjPYXYagem/4DQvIqiaerJKBy")
 //                .roles("MEMBER");
@@ -57,8 +78,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .roles("MEMBER","ADMIN");//한사용자가 둘다 들어갈수있다 (관리자)
     }
 
+//    @Bean
+//    public CustomUserDetailsService customUserDetailsService() {
+//        return new CustomUserDetailsService();//2
+//    }
     @Bean
-    public CustomUserDetailsService customUserDetailsService() {
-        return new CustomUserDetailsService();
+    public PersistentTokenRepository persistentTokenRepository(){
+        JdbcTokenRepositoryImpl repository = new JdbcTokenRepositoryImpl();
+        repository.setDataSource(dataSource);
+        return repository;
     }
 }
