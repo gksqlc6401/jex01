@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.zerock.jex01.security.hendler.CustomAccessDeniedHandler;
 import org.zerock.jex01.security.hendler.CustomLoginSuccessHandler;
 import org.zerock.jex01.security.service.CustomUserDetailsService;
 
@@ -41,10 +42,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.authorizeRequests()
-                .antMatchers("/sample/doAll").permitAll()
-                .antMatchers("/sample/doMember").access("hasRole('ROLE_MEMBER')")
-                .antMatchers("/sample/doAdmin").access("hasRole('ROLE_ADMIN')");
+//        http.authorizeRequests()
+//                .antMatchers("/sample/doAll").permitAll()
+//                .antMatchers("/sample/doMember").access("hasRole('ROLE_MEMBER')")
+//                .antMatchers("/sample/doAdmin").access("hasRole('ROLE_ADMIN')");
+//                //여기까지 하고 서버실행하면 doAdmin만 에러나야한다 SampleController로 가자 22
 
         http.formLogin().loginPage("/customLogin")//로그인 페이지는 커스텀 방식으로 띄우는데 로그인은 스프링 시큐리티가 알아서 해준다
                 .loginProcessingUrl("/login");//post방식으로 실제로 url을 처리하는거
@@ -57,7 +59,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.rememberMe().tokenRepository(persistentTokenRepository())
                 .key("zerock").tokenValiditySeconds(60*60*24*30);//한달짜리
 
+     http.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());//만든다 37
+
     }
+
+    @Bean
+    public CustomAccessDeniedHandler customAccessDeniedHandler(){
+        return new CustomAccessDeniedHandler();
+    }//만들고36
 
     @Bean
     public CustomLoginSuccessHandler customLoginSuccessHandler() {
@@ -78,10 +87,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .roles("MEMBER","ADMIN");//한사용자가 둘다 들어갈수있다 (관리자)
     }
 
-//    @Bean
-//    public CustomUserDetailsService customUserDetailsService() {
-//        return new CustomUserDetailsService();//2
-//    }
+//        @Bean
+//        public CustomUserDetailsService customUserDetailsService() {
+//            return new CustomUserDetailsService();//2
+//        }
     @Bean
     public PersistentTokenRepository persistentTokenRepository(){
         JdbcTokenRepositoryImpl repository = new JdbcTokenRepositoryImpl();

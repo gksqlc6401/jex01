@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="../includes/header.jsp"%>
-
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -42,7 +42,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputEmail2">Writer</label>
-                                    <input type="text" name="writer" class="form-control" id="exampleInputEmail2" placeholder="Enter Writer">
+                                    <input type="text" name="writer" class="form-control" id="exampleInputEmail2" placeholder="Enter Writer" readonly value="<sec:authentication property="principal.mid"/>">
+                                                                                                                                      <%--글쓸때 작성자 이름을 수정못하고, 로그인한 아이디값을 자동으로 넣어주려고 32--%>
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-12">

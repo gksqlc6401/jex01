@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.zerock.jex01.security.domain.Member;
+import org.zerock.jex01.security.dto.MemberDTO;
 import org.zerock.jex01.security.mapper.MemberMapper;
 
 import java.util.stream.Collectors;
@@ -34,20 +35,25 @@ public class CustomUserDetailsService implements UserDetailsService {
         log.warn(member);//12 이제야 진짜 로그인이 되는거다, 서버 실행하고 ex)id는 admin5 pw는pw5 하면 로그인 된다.
                                                                   //ex)id는 user5  pw는pw5 하면 로그인 된다.
 
-        if(member==null){// 멥버가 없다면
+        if(member==null){// 맴버가 없다면
             throw new UsernameNotFoundException("NOT EXIST");//8예외처리
         }
 
         String[] authorities = member.getRoleList().stream().map(memberRole -> memberRole.getRole()).toArray(String[]::new);
         //10 맴버를 가지고 오는데 두개이상이니까 배열로 가지고온다
 
-        User result = (User) User.builder()//다운 캐스팅
-                .username(username)//username은 이걸로 할거고
-                .password(member.getMpw())//9 비밀번호도 이걸로,인코딩된 패스워드로적어야 한다
-                .accountExpired(false)//만료된 계정인지?
-                .accountLocked(false)//권한 막아주는 잠금장치??
-                .authorities(authorities)//11 이계정의 권한은 뭐야?
-                .build();
+//        User result = null;//2 상속을 해서 만드려고 한다
+
+          User result = new MemberDTO(member);//상속을해서 MemberDTO를 불러줌
+          //서버실행해서 정삭적으로 로그인이 되는지 확인해야한다 remember-me가 설정되어있으면 쿠키지워주고 로그인한다.//9 jsp로
+
+//        User result = (User) User.builder()//다운 캐스팅
+//                .username(username)//username은 이걸로 할거고
+//                .password(member.getMpw())//9 비밀번호도 이걸로,인코딩된 패스워드로적어야 한다
+//                .accountExpired(false)//만료된 계정인지?
+//                .accountLocked(false)//권한 막아주는 잠금장치??
+//                .authorities(authorities)//11 이계정의 권한은 뭐야?
+//                .build();//1
 
         return  result;//리턴이 null이면 무조건 로그인 불가
     }

@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="../includes/header.jsp"%>
-
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %><%--28--%>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -62,7 +62,12 @@
 
                         <div class="card-footer float-right">
                             <button type="button" class="btn btn-default btnList">LIST</button>
+                            <sec:authentication property="principal" var="memberDTO"/><%-- var는 변수29--%>
+                                <c:if test="${boardDTO.writer eq memberDTO.mid}"><%--게시판에 근쓴 사용자랑 사용자의 아이디랑 같다면 수정 버튼 보여라 서버실행후 확인하자 30--%>
+                                                                                 <%--확인헀으면 쿼리문로 bno랑 writer를 맞춰주고 다시 실행 해보자--%>
                             <button type="button" class="btn btn-info btnMod">MODIFY</button>
+                                </c:if>
+
                         </div>
 
                            <%--파일이 있는지확인 하고 read에서 첨부파일 조회 하는 코드--%>

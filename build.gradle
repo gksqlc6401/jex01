@@ -91,6 +91,7 @@ dependencies {
     implementation group: 'org.springframework.security', name: 'spring-security-config', version: '5.5.2'
 
     implementation group: 'org.springframework.security', name: 'spring-security-taglibs', version: '5.5.2'
+    //09/15얘를이용해서 태그를사용함 그러면 편하게 할수있다.
 
     // https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api
     implementation group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'

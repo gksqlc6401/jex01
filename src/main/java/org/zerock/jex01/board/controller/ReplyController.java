@@ -2,6 +2,7 @@ package org.zerock.jex01.board.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.jex01.board.domain.Reply;
 import org.zerock.jex01.board.dto.ReplyDTO;
@@ -29,6 +30,8 @@ public class ReplyController {
         return new String[]{"AAA","BBB","CCC"};
     }
 
+    @PreAuthorize("isAuthenticated()")//로그인한 사용자는 댓글을 추가할 수 있다.(근데 익셉션이 어노테이션에서 걸려서 아예 진행이 안됨) 34
+                                      //handler패키지에 CustomAccessDeniedHandler클래스 만들고
     @PostMapping("")//포스트맨 raw JSON으로 활용
     public int add(@RequestBody ReplyDTO replyDTO) {//JSON으로 보내주는 데이터를 DTO로 바꿔준다
 

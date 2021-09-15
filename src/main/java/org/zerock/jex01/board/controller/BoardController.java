@@ -2,6 +2,7 @@ package org.zerock.jex01.board.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +35,7 @@ public class BoardController {
         model.addAttribute("time", timeService.getNow());
     }
 
+    @PreAuthorize("isAuthenticated()")//인증된 사용자만 가능하게 어노테이션 여기에서 서버실행하면 익명사용자는 로그인으로 튕겨냄 26
     @GetMapping("/register")
     public void registerGet() {
 
@@ -71,6 +73,8 @@ public class BoardController {
 
     }
 
+    @PreAuthorize("isAuthenticated()")//인증된 사용자만 가능하게 어노테이션 여기에서 서버실행하면 익명사용자는 로그인으로 튕겨냄 27
+                                      //근데 여기서 똑같은 사용자가 아니더라고 수정하고 삭제도 가능한 상황이다 권한을 따로 줘야할거같다 read.jsp로 가자
     @GetMapping(value = {"/read","/modify", "/read2"})
     public void read(Long bno, PageRequestDTO pageRequestDTO , Model model){
         log.info("c   read " + bno);
@@ -88,7 +92,8 @@ public class BoardController {
         }
         return "redirect:/board/list";
     }
-
+    @PreAuthorize("principal.mid==#boardDTO.writer")//이게 맞아야 글을 수정할수 있게끔 하는거다 33
+                                                    //서버 실행하고 수정하는데문제가 없어야 한다 replyController로 가자
     @PostMapping("/modify")
     public String modify(BoardDTO boardDTO, PageRequestDTO pageRequestDTO ,RedirectAttributes redirectAttributes){
         log.info("=============================");

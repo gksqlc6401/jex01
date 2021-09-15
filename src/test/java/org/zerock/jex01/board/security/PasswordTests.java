@@ -104,7 +104,7 @@ public class PasswordTests {
         String sql = "insert into tbl_member_role (mid, role) values('%s','%s');";
 
         for(int i = 0; i<10; i++) {
-            String result=String.format(sql, "user"+i, "ROLE_MEMBER");
+            String result=String.format(sql, "user  "+i, "ROLE_MEMBER");
 
             System.out.println(result);
         }
