@@ -15,13 +15,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.zerock.jex01.security.hendler.CustomAccessDeniedHandler;
+import org.zerock.jex01.security.hendler.CustomAuthenticationEntryPoint;
 import org.zerock.jex01.security.hendler.CustomLoginSuccessHandler;
 import org.zerock.jex01.security.service.CustomUserDetailsService;
 
 import javax.sql.DataSource;
 
 @Configuration   //애는 설정파일이야 라고하는거
-@EnableWebSecurity
+@EnableWebSecurity//WebSecurityConfigurerAdapter를 상속받은 클래스에 선언하면 springSecurityFilterChain가 자동으로 포함되어집니다.
+                  //springSecurityFilterChain을 등록하기 위해서는 AbstractSecurityWebApplicationInitializer를 상속받은 WebApplicationInitializer를 만들어두면 됩니다.
 @Log4j2
 @MapperScan(basePackages = "org.zerock.jex01.security.mapper")
 @ComponentScan(basePackages = "org.zerock.jex01.security.service")//3
@@ -59,14 +61,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.rememberMe().tokenRepository(persistentTokenRepository())
                 .key("zerock").tokenValiditySeconds(60*60*24*30);//한달짜리
 
-     http.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());//만든다 37
+        http.exceptionHandling()
+                .authenticationEntryPoint(customAuthenticationEntryPoint());//0916/5이걸 작성했다
+
+//     http.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());//0916/4이거 지우고
+
 
     }
 
     @Bean
     public CustomAccessDeniedHandler customAccessDeniedHandler(){
+
         return new CustomAccessDeniedHandler();
-    }//만들고36
+    }
+
+    @Bean
+    public CustomAuthenticationEntryPoint customAuthenticationEntryPoint() {
+        return new CustomAuthenticationEntryPoint();//0916/3 Bean추가했다
+    }
 
     @Bean
     public CustomLoginSuccessHandler customLoginSuccessHandler() {

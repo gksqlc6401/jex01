@@ -8,6 +8,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %><%--10--%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %><%--11--%>
+<%--권한 정보는 세션에 저장돼 있기 때문에 가져다가 사용해도 무방하지만, Security 태그를 사용하면 좀 더 가시성 좋게 코드를 구성할 수 있다.--%>
+<%--아래와 같이 의존 설정 해줍니다. JSP 파일에서 태그 라이브러리를 추가한다.--%>
 <html>
 <head>
     <title>Title</title>

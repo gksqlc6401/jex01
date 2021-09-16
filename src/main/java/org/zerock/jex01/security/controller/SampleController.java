@@ -16,7 +16,7 @@ public class SampleController {
         log.warn("doAll..........................");
     }
 
-    @PreAuthorize("isAuthenticated()")//CommonExceptionAdvice로 간다 23
+    @PreAuthorize("isAuthenticated()")// 요청이 들어와 함수를 실행하기 전에 권한을 검사하는 어노테이션, 로그아웃 하기전에 로그인이 되있는지 확인하는거 같다.그 CommonExceptionAdvice로 간다 23
     @GetMapping("/doMember")
     public void doMember() {
         log.warn("doMember..........................");
